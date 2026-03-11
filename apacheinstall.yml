@@ -1,0 +1,34 @@
+---
+- name: Web server install and port, service
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install apache server
+      yum:
+          name: httpd
+          state: present
+    - name: Start apache service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: Enabled httpd traffic in the firewall
+      firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        state: enabled
+      loop:
+        - http
+        - https
+    - name: Open firewall ports
+      firewalld:
+        port: "{{ item }}/tcp"
+        permanent: yes
+        state: enabled
+      loop:
+        - 80
+        - 443
+    - name: Reload firewall
+      command: firewalld-cmd --reload
+...
+

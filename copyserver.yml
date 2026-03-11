@@ -1,0 +1,14 @@
+---
+- name: Website install other server
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Copy website source code
+      copy:
+        src: /var/lib/jenkins/workspace/static-website-pull/catalog
+        dest: /var/www/html/
+        owner: apache
+        group: apache
+        mode: '0755'
+...
